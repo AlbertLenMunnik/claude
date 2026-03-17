@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 48" fill="none">
+  <g>
+    <rect x="2" y="4" width="40" height="40" rx="10" fill="url(#grad1d)" />
+    <path d="M14 32V16h3.5l9 12V16H30v16h-3.5l-9-12v12H14z" fill="white" />
+    <circle cx="35" cy="11" r="3.5" fill="#60A5FA" />
+    <circle cx="35" cy="11" r="1.5" fill="white" />
+  </g>
+  <text x="52" y="33" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="26" font-weight="700" fill="white">
+    Nexus<tspan fill="#60A5FA">Check</tspan>
+  </text>
+  <defs>
+    <linearGradient id="grad1d" x1="2" y1="4" x2="42" y2="44" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#2563EB" />
+      <stop offset="100%" stop-color="#7C3AED" />
+    </linearGradient>
+  </defs>
+</svg>

@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: nexus-tax-engine
+    runtime: node
+    plan: free           # upgrade to 'starter' or 'standard' for production
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: HOST
+        value: 0.0.0.0
+      - key: API_KEY
+        generateValue: true   # Render auto-generates a secure value
+      - key: CORS_ORIGIN
+        value: "*"            # Restrict to your domain in production, e.g. https://yourdomain.com
