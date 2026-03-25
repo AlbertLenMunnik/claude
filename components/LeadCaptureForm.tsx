@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { trackEvent } from "@/lib/analytics";
+import { trackEvent, events } from "@/lib/analytics";
 
 interface LeadCaptureFormProps {
   nexusCount: number;
@@ -52,6 +52,7 @@ export default function LeadCaptureForm({
 
       setSubmitted(true);
       trackEvent("lead_captured", { partner: effectivePartner, nexus_count: nexusCount });
+      events.leadCapturedConversion();
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {

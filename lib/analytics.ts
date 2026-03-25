@@ -37,4 +37,8 @@ export const events = {
     trackEvent("affiliate_card_click", { provider }),
 
   comparisonTableViewed: () => trackEvent("comparison_table_viewed"),
+
+  leadCapturedConversion: () => {
+    gtag("event", "conversion", { send_to: "AW-18021033999/lfHdCJiqY8cEI_QjJFD" });
+  },
 };
