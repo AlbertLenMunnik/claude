@@ -7,9 +7,12 @@ interface LeadCaptureFormProps {
   nexusCount: number;
   revenueRange: string;
   recommendedPartner: string;
+  selectedPartner?: string | null;
 }
 
-export default function LeadCaptureForm({ nexusCount, revenueRange, recommendedPartner }: LeadCaptureFormProps) {
+export default function LeadCaptureForm({
+  nexusCount, revenueRange, recommendedPartner, selectedPartner,
+}: LeadCaptureFormProps) {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState("");
@@ -19,6 +22,8 @@ export default function LeadCaptureForm({ nexusCount, revenueRange, recommendedP
     company: "",
     phone: "",
   });
+
+  const effectivePartner = selectedPartner || recommendedPartner;
 
   const update = (field: string, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -39,14 +44,14 @@ export default function LeadCaptureForm({ nexusCount, revenueRange, recommendedP
           ...form,
           nexusStates: nexusCount,
           revenueRange,
-          recommendedPartner,
+          recommendedPartner: effectivePartner,
         }),
       });
 
       if (!res.ok) throw new Error("Failed");
 
       setSubmitted(true);
-      trackEvent("lead_captured", { partner: recommendedPartner, nexus_count: nexusCount });
+      trackEvent("lead_captured", { partner: effectivePartner, nexus_count: nexusCount });
     } catch {
       setError("Something went wrong. Please try again.");
     } finally {
@@ -73,11 +78,20 @@ export default function LeadCaptureForm({ nexusCount, revenueRange, recommendedP
   return (
     <form onSubmit={handleSubmit} className="rounded-xl border border-brand-muted/30 bg-white p-6">
       <h3 className="text-lg font-semibold text-brand-dark">
-        Want Help Getting Compliant?
+        {selectedPartner
+          ? `Get Connected with ${selectedPartner}`
+          : "Want Help Getting Compliant?"}
       </h3>
       <p className="mt-1 text-sm text-primary-500">
         Leave your details and we&apos;ll connect you with the right solution for your business.
       </p>
+
+      {selectedPartner && (
+        <div className="mt-3 inline-flex items-center gap-2 rounded-lg border border-brand-muted/30 bg-primary-50 px-3 py-1.5 text-sm">
+          <span className="text-primary-500">Interested in:</span>
+          <span className="font-medium text-brand-dark">{selectedPartner}</span>
+        </div>
+      )}
 
       <div className="mt-5 grid gap-4 sm:grid-cols-2">
         <div>

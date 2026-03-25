@@ -14,8 +14,18 @@ export default function ResultsPage() {
   const router = useRouter();
   const [results, setResults] = useState<BulkNexusResult | null>(null);
   const [totalRevenue, setTotalRevenue] = useState(0);
+  const [selectedPartner, setSelectedPartner] = useState<string | null>(null);
   const affiliateRef = useRef<HTMLDivElement>(null);
   const comparisonRef = useRef<HTMLDivElement>(null);
+  const leadFormRef = useRef<HTMLDivElement>(null);
+
+  const handlePartnerClick = (partnerName: string) => {
+    setSelectedPartner(partnerName);
+    events.affiliateCardClick(partnerName);
+    setTimeout(() => {
+      leadFormRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 100);
+  };
 
   useEffect(() => {
     const stored = sessionStorage.getItem("nexusResults");
@@ -183,18 +193,15 @@ export default function ResultsPage() {
                   </div>
                 </div>
                 <div className="mt-4">
-                  <a
-                    href={recommendation.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => events.affiliateCardClick(recommendation.id)}
+                  <button
+                    onClick={() => handlePartnerClick(recommendation.name)}
                     className="inline-flex items-center gap-2 rounded-lg bg-accent px-6 py-3 text-sm font-medium text-brand-dark transition hover:bg-accent-dark"
                   >
-                    Learn More About {recommendation.name}
+                    Get Connected with {recommendation.name}
                     <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
                     </svg>
-                  </a>
+                  </button>
                 </div>
               </div>
             </div>
@@ -203,11 +210,12 @@ export default function ResultsPage() {
 
         {/* Lead Capture Form */}
         {nexusCount > 0 && (
-          <section className="mt-10">
+          <section ref={leadFormRef} className="mt-10">
             <LeadCaptureForm
               nexusCount={nexusCount}
               revenueRange={revenueRange}
               recommendedPartner={recommendation.name}
+              selectedPartner={selectedPartner}
             />
           </section>
         )}
@@ -241,7 +249,7 @@ export default function ResultsPage() {
                     { label: "Auto-filing", values: ["Included", "Add-on", "Included (managed)"] },
                     { label: "Registration help", values: ["Included", "Add-on", "Included"] },
                     { label: "Best for", values: ["SMB, fast setup", "5+ states, enterprise", "Hands-off sellers"] },
-                    { label: "Pricing", values: ["See pricing", "See pricing", "See pricing"] },
+                    { label: "Pricing", values: AFFILIATE_PARTNERS.map(p => p.price) },
                   ].map((row) => (
                     <tr key={row.label}>
                       <td className="p-4 font-medium text-brand-dark">{row.label}</td>
@@ -254,19 +262,16 @@ export default function ResultsPage() {
                     <td className="p-4"></td>
                     {AFFILIATE_PARTNERS.map((p) => (
                       <td key={p.id} className="p-4 text-center">
-                        <a
-                          href={p.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={() => events.affiliateCardClick(p.id)}
+                        <button
+                          onClick={() => handlePartnerClick(p.name)}
                           className={`inline-block rounded-lg px-4 py-2 text-sm font-medium transition ${
                             p.id === recommendation.id
                               ? "bg-accent text-brand-dark hover:bg-accent-dark"
                               : "border border-brand-muted/30 text-brand-dark hover:border-brand-olive hover:bg-primary-50"
                           }`}
                         >
-                          Learn More
-                        </a>
+                          Get Connected
+                        </button>
                       </td>
                     ))}
                   </tr>
