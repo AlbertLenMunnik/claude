@@ -8,6 +8,7 @@ import Footer from "@/components/Footer";
 import type { BulkNexusResult } from "@/lib/nexus/types";
 import { AFFILIATE_PARTNERS, getRecommendation } from "@/lib/affiliates";
 import { events } from "@/lib/analytics";
+import LeadCaptureForm from "@/components/LeadCaptureForm";
 
 export default function ResultsPage() {
   const router = useRouter();
@@ -63,6 +64,11 @@ export default function ResultsPage() {
   const { nexusStates, nonNexusStates, summary } = results;
   const nexusCount = summary.totalNexusStates;
   const recommendation = getRecommendation(nexusCount);
+
+  const revenueRange =
+    totalRevenue < 100000 ? "Under $100k" :
+    totalRevenue < 500000 ? "$100k\u2013$500k" :
+    totalRevenue < 1000000 ? "$500k\u2013$1M" : "Over $1M";
 
   const severityBg =
     nexusCount === 0 ? "bg-emerald-50 border-emerald-200" :
@@ -192,6 +198,17 @@ export default function ResultsPage() {
                 </div>
               </div>
             </div>
+          </section>
+        )}
+
+        {/* Lead Capture Form */}
+        {nexusCount > 0 && (
+          <section className="mt-10">
+            <LeadCaptureForm
+              nexusCount={nexusCount}
+              revenueRange={revenueRange}
+              recommendedPartner={recommendation.name}
+            />
           </section>
         )}
 
